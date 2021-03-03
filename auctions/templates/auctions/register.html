@@ -1,0 +1,41 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+   Register
+{% endblock %}
+
+
+{% block body %}
+
+<div class="content">
+    <div class="text">
+        <h3 class="titles">Register</h3>
+
+        {% if message %}
+            <div>{{ message }}</div>
+        {% endif %}
+    </div>
+    <div class="formulario card" style="max-width: 500px;">
+        <form action="{% url 'register' %}" method="post">
+            {% csrf_token %}
+            <div class="form-dir">
+                <input class="form-control" autofocus type="text" name="username" placeholder="Username" autocomplete="off" >
+            </div>
+            <div class="form-dir">
+                <input class="form-control" type="email" name="email" placeholder="Email Address" autocomplete="off" >
+            </div>
+            <div class="form-dir">
+                <input class="form-control" type="password" name="password" placeholder="Password" autocomplete="off" >
+            </div>
+            <div class="form-dir">
+                <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password" autocomplete="off" >
+            </div>
+            <div class="form-dir">
+            <button class="btn btn-info" type="submit" value="Register">Register</button></div>
+        </form>
+        <div class="text"> Already have an account? <a href="{% url 'login' %}" class="enlace">Log In here.</a></div>
+    </div>
+    
+
+</div>
+{% endblock %}

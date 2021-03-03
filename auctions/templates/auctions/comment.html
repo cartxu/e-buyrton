@@ -1,0 +1,27 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    New Comment
+{% endblock %}
+
+{% block body %}
+
+
+<div class="content">
+    <div class="text">
+     <h3 class="titles">Comment: {{ listing.title }}</h3>
+    </div>
+
+    <form action="{% url 'comment' listing_id %}" method="post" enctype="multipart/form-data" class="formulario">
+        {% csrf_token %}
+        <div class="form-dir">
+            {{ form.comment }}
+
+        </div>
+        <div class="form-dir">
+        <button class="btn btn-info" type="submit" value="Post">Post Comment</button>
+        </div>
+    </form>
+
+</div>
+{% endblock %}

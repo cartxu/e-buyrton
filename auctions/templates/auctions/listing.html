@@ -1,0 +1,131 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    {{ listing.title }}
+{% endblock %}
+
+{% block body %}
+<div class="content">
+<div class="text">
+     <h3 class="titles"> {{ listing.title }} </h3>  
+</div>
+
+    <div class="container">
+            <div class="card mb-3" style="max-width: 540px;"> 
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="img-container">
+                            <img src="{{ listing.image }}" alt="{{ listing.title }}" class="img-list">
+                                {% if user.is_authenticated and user.username == listing.user.username and not listing.closed %}
+                                <form action="{% url 'listing' listing.id %}" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <button type="submit" name="close" class="btn btn-danger" value="close">Close</button>
+                                </form>
+                                {% endif %}
+
+                                {% if user.is_authenticated and user.username == listing.user.username and listing.closed %}
+                                <form action="{% url 'listing' listing.id %}" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <button type="submit" name="open" class="btn btn-success" value="close">Open</button>
+                                </form>    
+                                {% endif %}
+        
+                                {% if user.is_authenticated and user.username != listing.user.username %}
+                                    <form action="{% url 'listing' listing.id %}" method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                        <button type="submit" class="btn btn-warning" name="watchlist" value="watchlist" ><i class="fas fa-star"></i></button>
+                                    </form>
+                                    {% endif %}  
+                        </div>
+
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body"> 
+                        {% if fav %}
+                            <small class="text-watch">{{ fav }}</small> 
+                       {% endif %}
+                       {% if user.is_authenticated and user.username == listing.bids.last.user.username and listing.closed %}
+                       <div class="winner">
+                            Congrats, {{ listing.bids.last.user.username }}! <i class="fas fa-trophy"></i>
+                       </div>
+                       {% endif %}
+                            <p class="card-text">{{ listing.description }}</p>
+                            <small class="text-muted"><i class="far fa-user"></i> {{ listing.user }}</small><br>
+                            <small class="text-muted"><i class="fas fa-coins"></i> {{ listing.startbid }}$</small><br>
+                            <small class="text-muted"><i class="fas fa-tag"></i> {{ listing.category.first.name }} </small><br>
+                            <small class="text-muted"><i class="far fa-calendar-alt"></i> {{ listing.date }}</small><br></p>                          
+                        </div>
+                    </div>
+
+                </div>
+            
+                <div>
+                        
+                        {% if user.is_authenticated and user.username != listing.user.username and not listing.closed %}
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <form action="{% url 'listing' listing.id %}" method="POST" enctype="multipart/form-data">
+                                    <p class="card-text" style="font-weight: 500;">
+                                        Bid(s): <span style="color: #16abc2; "> {{ listing.bids.count }} </span> <br>
+                                        Current Price:  <span style="color: #16abc2; ">{{ listing.startbid }}$ </span><br>
+                                        Last Bid By:  <span style="color: #16abc2;" >"{{ listing.bids.last.user.username }}"</span></p> 
+                                        <div class="input-group mb-3" style="max-width: 170px;">
+                                            {% csrf_token %}
+                                            <button type="submit"  class="btn btn-outline-info" name="bid">Bid <i class="fas fa-hand-holding-usd" style="font-size: 22px;"></i></button>{{ form.bid }}
+                                        
+                                            
+                                        </div>
+                                    
+                                </form>  
+                                
+                            </div>
+
+
+                        </div>
+                        
+                    </div>
+
+                    <div >
+                        {% if message %}
+                        <div class="alert alert-warning">{{ message }}</div>
+                        {% endif %}
+                    </div>
+
+                        {% endif %}
+                    
+                    
+                    <div>
+                
+
+                </div>
+
+
+            </div> 
+        </div>
+        
+        <div class="btn-comment">
+            {% if user.is_authenticated %}          
+                            
+            <a href="{% url 'comment' listing.id %}"> <button type="submit"  class="btn btn-outline-info">Leave a Comment</button></a>
+            
+            {% endif %}   
+        </div>        
+        {% for comments in listing.comments.all %}        
+        <div class="comments card text-dark mb-3" style="max-width: 540px;">
+            
+            <div class="card-body"> 
+              
+                <p>{{ comments.comment }}</p>
+           
+
+            </div>
+            <hr>
+                <small class="text-muted">Comment by: <i class="far fa-user"></i> {{ comments.user}} | <i class="far fa-calendar-alt"></i> {{ comments.time}} </small>
+        
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+      
+{% endblock %}

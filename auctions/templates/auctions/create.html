@@ -1,0 +1,39 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    Create Listing
+{% endblock %}
+
+{% block body %}
+
+{% if user.is_authenticated %}
+    <div class="content">
+       <div class="text">
+        <h3 class="titles">Create New Listing</h3></div>
+        
+        <form action="{% url 'create' %}" method="post" enctype="multipart/form-data" class="formulario card">
+            {% csrf_token %}
+            <div class="form-dir">
+            <label for="title">Title</label> {{ form.title }}
+            </div>
+            <div class="form-dir">
+            <label for="description" >Description</label> {{ form.description }}
+            </div>
+            <div class="form-dir">
+            <label for="startbid"> Initial price</label> {{ form.startbid }}
+            </div>
+            <div class="form-dir">
+            <label for="image" >Image URL</label> {{ form.image }}
+            </div>
+            <div class="form-dir">
+            <label for="category">Category</label> {{ form.category }}
+            </div>
+            <button class="btn btn-info" type="submit" value="Submit"> Submit</button>
+        </form>
+{% else %}
+    <div class="content">
+        <p class="alert alert-danger" role="alert">To create a new listing <a href="{% url 'login' %}">log in</a> first, please.</p>
+    </div>
+{% endif %}
+
+{% endblock %}
